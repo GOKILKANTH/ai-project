@@ -26,17 +26,34 @@ document.addEventListener('DOMContentLoaded', function(){
   // ===== Cart Functionality =====
   const cartBtn = document.getElementById('cartBtn');
   const cartCountEl = document.getElementById('cartCount');
-  let cartCount = parseInt(localStorage.getItem('bike_cart_count')) || 0;
   
-  // Update cart display
-  cartCountEl.textContent = cartCount;
+  // Initialize cart display
+  const initialStats = DatabaseManager.getCartStats();
+  cartCountEl.textContent = initialStats.totalItems;
+  
+  let cartCount = initialStats.totalItems;
   
   // Add to cart buttons
   document.querySelectorAll('.buy').forEach(btn => {
     btn.addEventListener('click', function(){
-      cartCount++;
-      localStorage.setItem('bike_cart_count', cartCount);
-      cartCountEl.textContent = cartCount;
+      const productName = this.closest('.card').querySelector('h3').textContent;
+      const productPrice = parseFloat(this.closest('.card').querySelector('.price').textContent.replace('$', ''));
+      const productId = this.getAttribute('data-id');
+      const productImage = this.closest('.card').querySelector('img').src;
+      
+      // Create product object and add to database
+      const product = {
+        id: productId,
+        name: productName,
+        price: productPrice,
+        image: productImage
+      };
+      
+      DatabaseManager.addToCart(product);
+      
+      // Update cart count
+      const stats = DatabaseManager.getCartStats();
+      cartCountEl.textContent = stats.totalItems;
       
       // Visual feedback
       btn.textContent = 'Added! ✓';
@@ -106,6 +123,14 @@ document.addEventListener('DOMContentLoaded', function(){
       const formMessage = document.getElementById('formMessage');
       const name = document.getElementById('name').value;
       const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone')?.value || '';
+      
+      // Save customer data to database
+      DatabaseManager.addCustomer({
+        name: name,
+        email: email,
+        phone: phone
+      });
       
       // Simulate form submission
       formMessage.textContent = 'Thank you, ' + name + '! We\'ll get back to you at ' + email + ' shortly.';
