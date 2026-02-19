@@ -571,6 +571,81 @@ main {
   font-weight: 500;
 }
 
+/* ===========================
+   LOCATION SECTION
+   =========================== */
+
+.location-section {
+  padding: 4rem 0;
+  background: var(--bg);
+}
+
+.location-section h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 3rem;
+  color: var(--text);
+}
+
+.location-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.location-map {
+  width: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.map-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.location-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.location-item {
+  background: var(--bg-alt);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.location-item h3 {
+  color: var(--primary);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.location-item p {
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+  line-height: 1.8;
+}
+
+.location-item a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.location-item a:hover {
+  text-decoration: underline;
+}
+
 .team-section {
   padding: 4rem 0;
   background: var(--bg-alt);
@@ -842,6 +917,14 @@ main {
 
   .about-stats {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .location-content {
+    grid-template-columns: 1fr;
+  }
+
+  .location-details {
+    grid-template-columns: 1fr;
   }
 
   .feature-grid,

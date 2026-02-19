@@ -35,6 +35,33 @@ const CONFIG = {
     version: '1.0.0',
     currency: '$',
     freeShippingThreshold: 500
+  },
+
+  // Shop Information
+  shop: {
+    name: 'Bike Sale Store',
+    owner: 'Gokil',
+    email: 'gokil@bikesale.com',
+    phone: '+919500996635',
+    supportEmail: 'support@bikesale.com',
+    address: {
+      street: '123 Bike Street',
+      city: 'Cycle City',
+      state: 'CC',
+      zipCode: '12345',
+      country: 'United States'
+    },
+    hours: {
+      weekday: '9:00 AM - 6:00 PM EST',
+      saturday: '10:00 AM - 4:00 PM EST',
+      sunday: 'Closed',
+      timezone: 'EST'
+    },
+    social: {
+      facebook: 'https://facebook.com/bikesale',
+      instagram: 'https://instagram.com/bikesale',
+      twitter: 'https://twitter.com/bikesale'
+    }
   }
 };
 
