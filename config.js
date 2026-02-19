@@ -45,17 +45,18 @@ const CONFIG = {
     phone: '+919500996635',
     supportEmail: 'support@bikesale.com',
     address: {
-      street: '123 Bike Street',
-      city: 'Cycle City',
-      state: 'CC',
-      zipCode: '12345',
-      country: 'United States'
+      street: '432/Mattigaikurichi',
+      landmark: 'Modern Rice Mill Opposite',
+      city: 'Kallakurichi',
+      state: 'Tamil Nadu',
+      zipCode: '606217',
+      country: 'India'
     },
     hours: {
-      weekday: '9:00 AM - 6:00 PM EST',
-      saturday: '10:00 AM - 4:00 PM EST',
+      weekday: '9:00 AM - 6:00 PM IST',
+      saturday: '10:00 AM - 4:00 PM IST',
       sunday: 'Closed',
-      timezone: 'EST'
+      timezone: 'IST'
     },
     social: {
       facebook: 'https://facebook.com/bikesale',
