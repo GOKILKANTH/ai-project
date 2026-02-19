@@ -1,14 +1,91 @@
-# Bike Sale App
+# Bike Sale App - 4 Page Website
 
-Static demo site for a small bike storefront.
+A modern, clean, and responsive multi-page website for a bike sales business.
 
-Open `index.html` in your browser, or serve the folder with a simple HTTP server:
+## Pages
 
-```bash
-# from this project folder
-python -m http.server 8000
-# then open http://localhost:8000
+1. **Home** (`index.html`) - Landing page with hero section, features, and featured products
+2. **Products** (`products.html`) - Full product catalog with filtering by bike type
+3. **About** (`about.html`) - Company story, mission, team members, and statistics
+4. **Contact** (`contact.html`) - Contact information and contact form
+
+## Features
+
+✨ **Modern Clean Design**
+- Responsive layout that works on all devices
+- Beautiful gradient hero sections
+- Clean typography with consistent spacing
+- Professional color scheme
+
+🛒 **Shopping Features**
+- Add to cart functionality
+- Cart counter in header
+- Product filtering by category
+- Product showcase with descriptions
+
+📱 **Mobile Responsive**
+- Optimized for mobile, tablet, and desktop
+- Mobile-friendly navigation menu
+- Touch-friendly buttons and forms
+
+⚡ **Performance**
+- Lightweight CSS and JavaScript
+- Smooth animations and transitions
+- Fast loading times
+- Optimized images from Unsplash
+
+## File Structure
+
 ```
+ai project/
+├── index.html (Home page)
+├── products.html (Products page)
+├── about.html (About page)
+├── contact.html (Contact page)
+├── styles.css (Main stylesheet)
+├── script.js (JavaScript functionality)
+├── README.md (This file)
+└── images/ (Image assets folder)
+```
+
+## Getting Started
+
+1. Open `index.html` in your browser
+2. Navigate through pages using the top navigation menu
+3. Use the mobile menu (☰) on smaller screens
+4. Add products to cart on any page
+5. Fill out the contact form to send a message
+
+## Customization
+
+### Colors
+Edit the CSS variables in `styles.css` to change the color scheme:
+```css
+:root {
+  --primary: #2563eb;
+  --danger: #ef4444;
+  --success: #10b981;
+  /* ... more variables */
+}
+```
+
+### Content
+Update the HTML files to add your own:
+- Product information
+- Team member details
+- Contact information
+- Company description
+
+## Browser Support
+
+- Chrome/Edge (latest)
+- Firefox (latest)
+- Safari (latest)
+- Mobile browsers
+
+## License
+
+Built with ❤️ for demonstration purposes.
 
 Theme selector:
 

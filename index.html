@@ -3,32 +3,21 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Bike Sale App</title>
+    <title>Bike Sale App - Home</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="site-header">
       <div class="container header-inner">
-        <div class="brand">Bike Sale App
-          <div class="owner">Owner: Gokilkanth</div>
-        </div>
+        <div class="brand">🚴 Bike Sale</div>
         <nav class="nav" id="nav">
-          <a href="#features">Features</a>
-          <a href="#products">Products</a>
-          <a href="#contact">Contact</a>
+          <a href="index.html" class="active">Home</a>
+          <a href="products.html">Products</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
         </nav>
         <div class="actions">
           <button id="cartBtn" class="cart">Cart <span id="cartCount">0</span></button>
-          <label for="themeSelect" class="theme-label">
-            Theme
-            <select id="themeSelect" aria-label="Select theme">
-              <option value="default">Default</option>
-              <option value="sunset">Sunset</option>
-              <option value="forest">Forest</option>
-              <option value="night">Night</option>
-            </select>
-          </label>
-          <button id="themePickerBtn" class="btn small" aria-haspopup="true" aria-expanded="false">More themes</button>
           <button id="menuToggle" class="menu-toggle" aria-label="Toggle menu">☰</button>
         </div>
       </div>
@@ -37,96 +26,106 @@
     <main>
       <section class="hero">
         <div class="container hero-inner">
-          <h1>Find Your Next Ride</h1>
-          <p>Quality bikes at great prices — shop our curated selection and ride away today.</p>
+          <h1>Find Your Perfect Ride</h1>
+          <p>Premium quality bikes at unbeatable prices. Discover our collection of road, mountain, and hybrid bikes.</p>
           <div class="hero-ctas">
-            <a class="btn" href="#products">Shop Bikes</a>
-            <a class="btn secondary" href="#contact">Get in Touch</a>
+            <a class="btn primary" href="products.html">Shop Now</a>
+            <a class="btn secondary" href="contact.html">Learn More</a>
           </div>
         </div>
       </section>
 
-      <section id="features" class="container features">
-        <h2>Why Choose Us</h2>
-        <div class="feature-grid">
-          <div class="feature">Wide Selection</div>
-          <div class="feature">Free Shipping</div>
-          <div class="feature">Easy Returns</div>
-        </div>
-      </section>
-
-      <section id="products" class="container products">
-        <h2>Featured Bikes</h2>
-        <div class="product-grid">
-          <article class="card">
-            <img src="https://source.unsplash.com/800x600/?road+bike" alt="Road Bike" />
-            <h3>Roadster 200</h3>
-            <p class="price">$699</p>
-            <button class="btn buy" data-id="roadster-200">Add to Cart</button>
-          </article>
-
-          <article class="card">
-            <img src="https://source.unsplash.com/800x600/?mountain+bike" alt="Mountain Bike" />
-            <h3>Summit Mountain</h3>
-            <p class="price">$849</p>
-            <button class="btn buy" data-id="summit-mtn">Add to Cart</button>
-          </article>
-
-          <article class="card">
-            <img src="https://source.unsplash.com/800x600/?city+bike,hybrid" alt="Hybrid Bike" />
-            <h3>City Hybrid</h3>
-            <p class="price">$529</p>
-            <button class="btn buy" data-id="city-hybrid">Add to Cart</button>
-          </article>
-        </div>
-      </section>
-
-      <section id="contact" class="container contact">
-        <h2>Contact Us</h2>
-        <form class="contact-form" onsubmit="alert('This is a demo form — no backend configured'); return false;">
-          <label>
-            Name
-            <input type="text" name="name" required />
-          </label>
-          <label>
-            Email
-            <input type="email" name="email" required />
-          </label>
-          <label>
-            Message
-            <textarea name="message" rows="4"></textarea>
-          </label>
-          <div>
-            <button class="btn" type="submit">Send</button>
+      <section class="features-section">
+        <div class="container">
+          <div class="feature-grid">
+            <div class="feature-card">
+              <div class="feature-icon">🚚</div>
+              <h3>Free Shipping</h3>
+              <p>On orders over $500</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">✓</div>
+              <h3>Easy Returns</h3>
+              <p>30-day return policy</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">🏆</div>
+              <h3>Quality Guaranteed</h3>
+              <p>Premium bikes only</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">💬</div>
+              <h3>Expert Support</h3>
+              <p>24/7 customer service</p>
+            </div>
           </div>
-        </form>
+        </div>
+      </section>
+
+      <section class="featured-section">
+        <div class="container">
+          <h2>Featured Bikes</h2>
+          <div class="product-grid">
+            <article class="card">
+              <img src="https://source.unsplash.com/800x600/?road+bike" alt="Road Bike" />
+              <div class="card-content">
+                <h3>Roadster 200</h3>
+                <p class="price">$699</p>
+                <button class="btn primary buy" data-id="roadster-200">Add to Cart</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <img src="https://source.unsplash.com/800x600/?mountain+bike" alt="Mountain Bike" />
+              <div class="card-content">
+                <h3>Summit Mountain</h3>
+                <p class="price">$849</p>
+                <button class="btn primary buy" data-id="summit-mtn">Add to Cart</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <img src="https://source.unsplash.com/800x600/?city+bike,hybrid" alt="Hybrid Bike" />
+              <div class="card-content">
+                <h3>City Hybrid</h3>
+                <p class="price">$529</p>
+                <button class="btn primary buy" data-id="city-hybrid">Add to Cart</button>
+              </div>
+            </article>
+          </div>
+          <div style="text-align: center; margin-top: 2rem;">
+            <a href="products.html" class="btn secondary">View All Products</a>
+          </div>
+        </div>
       </section>
     </main>
 
     <footer class="site-footer">
-      <div class="container">© Bike Sale App — Built for demo</div>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-col">
+            <h4>About</h4>
+            <p>Premium quality bikes for every rider.</p>
+          </div>
+          <div class="footer-col">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="products.html">Products</a></li>
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Contact</h4>
+            <p>Email: info@bikesale.com</p>
+            <p>Phone: (555) 123-4567</p>
+          </div>
+        </div>
+        <hr>
+        <div class="footer-bottom">© 2025 Bike Sale App. All rights reserved.</div>
+      </div>
     </footer>
 
     <script src="script.js"></script>
-    <div id="themePanel" class="theme-panel" aria-hidden="true">
-      <div class="theme-panel-inner container">
-        <h3>Pick a theme</h3>
-        <div class="swatches">
-          <button class="swatch" data-theme="default" title="Default"><span></span><small>Default</small></button>
-          <button class="swatch" data-theme="sunset" title="Sunset"><span></span><small>Sunset</small></button>
-          <button class="swatch" data-theme="forest" title="Forest"><span></span><small>Forest</small></button>
-          <button class="swatch" data-theme="night" title="Night"><span></span><small>Night</small></button>
-          <button class="swatch" data-theme="ocean" title="Ocean"><span></span><small>Ocean</small></button>
-          <button class="swatch" data-theme="solar" title="Solar"><span></span><small>Solar</small></button>
-          <button class="swatch" data-theme="lavender" title="Lavender"><span></span><small>Lavender</small></button>
-          <button class="swatch" data-theme="ember" title="Ember"><span></span><small>Ember</small></button>
-          <button class="swatch" data-theme="mint" title="Mint"><span></span><small>Mint</small></button>
-          <button class="swatch" data-theme="coral" title="Coral"><span></span><small>Coral</small></button>
-        </div>
-        <div class="theme-panel-close">
-          <button id="closeThemePanel" class="btn">Close</button>
-        </div>
-      </div>
-    </div>
   </body>
 </html>

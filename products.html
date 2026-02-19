@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Bike Sale App - Products</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <div class="brand">🚴 Bike Sale</div>
+        <nav class="nav" id="nav">
+          <a href="index.html">Home</a>
+          <a href="products.html" class="active">Products</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+        <div class="actions">
+          <button id="cartBtn" class="cart">Cart <span id="cartCount">0</span></button>
+          <button id="menuToggle" class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero-small">
+        <div class="container">
+          <h1>Our Bikes Collection</h1>
+          <p>Choose from our premium selection of road, mountain, and hybrid bikes</p>
+        </div>
+      </section>
+
+      <section class="products-section">
+        <div class="container">
+          <div class="filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="road">Road Bikes</button>
+            <button class="filter-btn" data-filter="mountain">Mountain Bikes</button>
+            <button class="filter-btn" data-filter="hybrid">Hybrid Bikes</button>
+          </div>
+
+          <div class="product-grid">
+            <article class="card" data-category="road">
+              <img src="https://source.unsplash.com/800x600/?road+bike,1" alt="Roadster 200" />
+              <div class="card-content">
+                <h3>Roadster 200</h3>
+                <p class="description">Lightweight and fast for long-distance rides</p>
+                <p class="price">$699</p>
+                <button class="btn primary buy" data-id="roadster-200">Add to Cart</button>
+              </div>
+            </article>
+
+            <article class="card" data-category="mountain">
+              <img src="https://source.unsplash.com/800x600/?mountain+bike,1" alt="Summit Mountain" />
+              <div class="card-content">
+                <h3>Summit Mountain</h3>
+                <p class="description">Perfect for off-road adventures and trails</p>
+                <p class="price">$849</p>
+                <button class="btn primary buy" data-id="summit-mtn">Add to Cart</button>
+              </div>
+            </article>
+
+            <article class="card" data-category="hybrid">
+              <img src="https://source.unsplash.com/800x600/?city+bike" alt="City Hybrid" />
+              <div class="card-content">
+                <h3>City Hybrid</h3>
+                <p class="description">Versatile bike for city commuting</p>
+                <p class="price">$529</p>
+                <button class="btn primary buy" data-id="city-hybrid">Add to Cart</button>
+              </div>
+            </article>
+
+            <article class="card" data-category="road">
+              <img src="https://source.unsplash.com/800x600/?road+bike,2" alt="Pro Racer X" />
+              <div class="card-content">
+                <h3>Pro Racer X</h3>
+                <p class="description">Carbon fiber frame for ultimate performance</p>
+                <p class="price">$1,299</p>
+                <button class="btn primary buy" data-id="pro-racer-x">Add to Cart</button>
+              </div>
+            </article>
+
+            <article class="card" data-category="mountain">
+              <img src="https://source.unsplash.com/800x600/?mountain+bike,2" alt="Trail Explorer" />
+              <div class="card-content">
+                <h3>Trail Explorer</h3>
+                <p class="description">Full suspension for rough terrain</p>
+                <p class="price">$999</p>
+                <button class="btn primary buy" data-id="trail-explorer">Add to Cart</button>
+              </div>
+            </article>
+
+            <article class="card" data-category="hybrid">
+              <img src="https://source.unsplash.com/800x600/?hybrid+bike" alt="Urban Classic" />
+              <div class="card-content">
+                <h3>Urban Classic</h3>
+                <p class="description">Stylish and comfortable for everyday riding</p>
+                <p class="price">$649</p>
+                <button class="btn primary buy" data-id="urban-classic">Add to Cart</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-col">
+            <h4>About</h4>
+            <p>Premium quality bikes for every rider.</p>
+          </div>
+          <div class="footer-col">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="products.html">Products</a></li>
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Contact</h4>
+            <p>Email: info@bikesale.com</p>
+            <p>Phone: (555) 123-4567</p>
+          </div>
+        </div>
+        <hr>
+        <div class="footer-bottom">© 2025 Bike Sale App. All rights reserved.</div>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
