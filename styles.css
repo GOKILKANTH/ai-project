@@ -21,6 +21,78 @@
   --transition: all 0.3s ease;
 }
 
+/* ===== THEME: DARK ===== */
+body[data-theme="dark"] {
+  --primary: #60a5fa;
+  --primary-light: #93c5fd;
+  --primary-dark: #3b82f6;
+  --bg: #1f2937;
+  --bg-alt: #111827;
+  --text: #f3f4f6;
+  --text-light: #d1d5db;
+  --border: #374151;
+}
+
+/* ===== THEME: OCEAN ===== */
+body[data-theme="ocean"] {
+  --primary: #0ea5e9;
+  --primary-light: #38bdf8;
+  --primary-dark: #0284c7;
+  --bg: #f0f9ff;
+  --bg-alt: #e0f2fe;
+  --text: #0c4a6e;
+  --text-light: #0369a1;
+  --border: #bae6fd;
+}
+
+/* ===== THEME: SUNSET ===== */
+body[data-theme="sunset"] {
+  --primary: #f97316;
+  --primary-light: #fb923c;
+  --primary-dark: #ea580c;
+  --bg: #fef3c7;
+  --bg-alt: #fde68a;
+  --text: #8b4513;
+  --text-light: #a16207;
+  --border: #fed7aa;
+}
+
+/* ===== THEME: FOREST ===== */
+body[data-theme="forest"] {
+  --primary: #16a34a;
+  --primary-light: #22c55e;
+  --primary-dark: #15803d;
+  --bg: #f0fdf4;
+  --bg-alt: #dcfce7;
+  --text: #166534;
+  --text-light: #22c55e;
+  --border: #bbf7d0;
+}
+
+/* ===== THEME: PURPLE ===== */
+body[data-theme="purple"] {
+  --primary: #a855f7;
+  --primary-light: #d8b4fe;
+  --primary-dark: #9333ea;
+  --bg: #faf5ff;
+  --bg-alt: #f3e8ff;
+  --text: #581c87;
+  --text-light: #7e22ce;
+  --border: #edafff;
+}
+
+/* ===== THEME: ROSE ===== */
+body[data-theme="rose"] {
+  --primary: #f43f5e;
+  --primary-light: #fb7185;
+  --primary-dark: #e11d48;
+  --bg: #fff5f7;
+  --bg-alt: #ffe4e6;
+  --text: #831843;
+  --text-light: #be185d;
+  --border: #fbcfe8;
+}
+
 /* ===========================
    RESET & GLOBAL STYLES
    =========================== */
@@ -156,6 +228,43 @@ main {
   padding: 0.1rem 0.35rem;
   font-size: 0.75rem;
   margin-left: 0.3rem;
+}
+
+/* ===========================
+   THEME SELECTOR
+   =========================== */
+
+.theme-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.theme-selector label {
+  font-weight: 500;
+  color: var(--text);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.theme-selector select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.theme-selector select:hover,
+.theme-selector select:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 /* ===========================
@@ -708,6 +817,10 @@ main {
 
   .menu-toggle {
     display: block;
+  }
+
+  .theme-selector label {
+    display: none;
   }
 
   .hero h1 {

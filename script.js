@@ -1,4 +1,28 @@
 document.addEventListener('DOMContentLoaded', function(){
+  // ===== Theme System =====
+  const themeSelect = document.getElementById('themeSelect');
+  const savedTheme = localStorage.getItem('bike_sale_theme') || 'default';
+  
+  // Apply saved theme on page load
+  if(savedTheme !== 'default') {
+    document.body.setAttribute('data-theme', savedTheme);
+  }
+  
+  if(themeSelect) {
+    themeSelect.value = savedTheme;
+    themeSelect.addEventListener('change', function(e){
+      const theme = e.target.value;
+      
+      if(theme === 'default') {
+        document.body.removeAttribute('data-theme');
+      } else {
+        document.body.setAttribute('data-theme', theme);
+      }
+      
+      localStorage.setItem('bike_sale_theme', theme);
+    });
+  }
+  
   // ===== Cart Functionality =====
   const cartBtn = document.getElementById('cartBtn');
   const cartCountEl = document.getElementById('cartCount');
