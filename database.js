@@ -153,7 +153,24 @@ const PRODUCTS_DATABASE = [
       brakes: 'Rim Brakes'
     },
     inStock: true,
+    inventory: 25,
     reviews: 4.2,
     reviewCount: 19
   }
 ];
+
+// ===========================
+// INVENTORY STORAGE
+// ===========================
+
+const INVENTORY_DATABASE = {
+  'roadster-200': 30,
+  'summit-mtn': 15,
+  'city-hybrid': 40,
+  'pro-racer-x': 8,
+  'trail-explorer': 12,
+  'urban-classic': 22,
+  'speedster-elite': 5,
+  'beast-terrain': 10,
+  'comfort-cruiser': 25
+};

@@ -215,7 +215,210 @@ const DatabaseManager = {
     };
   },
 
-  // CLEAR ALL DATA
+  // ===== SEARCH FUNCTIONALITY =====
+  searchProducts(query) {
+    const products = this.getProducts();
+    const searchTerm = query.toLowerCase().trim();
+    
+    if (!searchTerm) return products;
+    
+    return products.filter(product => 
+      product.name.toLowerCase().includes(searchTerm) ||
+      product.description.toLowerCase().includes(searchTerm) ||
+      product.category.toLowerCase().includes(searchTerm) ||
+      Object.values(product.specs).some(spec => 
+        spec.toString().toLowerCase().includes(searchTerm)
+      )
+    );
+  },
+
+  // ===== ADVANCED FILTERING =====
+  filterProducts(criteria) {
+    let products = this.getProducts();
+    
+    // Filter by category
+    if (criteria.category && criteria.category !== 'all') {
+      products = products.filter(p => p.category === criteria.category);
+    }
+    
+    // Filter by price range
+    if (criteria.minPrice !== undefined) {
+      products = products.filter(p => p.price >= criteria.minPrice);
+    }
+    if (criteria.maxPrice !== undefined) {
+      products = products.filter(p => p.price <= criteria.maxPrice);
+    }
+    
+    // Filter by stock status
+    if (criteria.inStock === true) {
+      products = products.filter(p => p.inStock);
+    }
+    
+    // Filter by minimum rating
+    if (criteria.minRating !== undefined) {
+      products = products.filter(p => p.reviews >= criteria.minRating);
+    }
+    
+    // Filter by minimum review count
+    if (criteria.minReviews !== undefined) {
+      products = products.filter(p => p.reviewCount >= criteria.minReviews);
+    }
+    
+    return products;
+  },
+
+  // ===== SORTING =====
+  sortProducts(products, sortBy = 'name', order = 'asc') {
+    const sorted = [...products];
+    
+    sorted.sort((a, b) => {
+      let valueA = a[sortBy];
+      let valueB = b[sortBy];
+      
+      if (typeof valueA === 'string') {
+        valueA = valueA.toLowerCase();
+        valueB = valueB.toLowerCase();
+      }
+      
+      if (order === 'asc') {
+        return valueA > valueB ? 1 : -1;
+      } else {
+        return valueA < valueB ? 1 : -1;
+      }
+    });
+    
+    return sorted;
+  },
+
+  // ===== INVENTORY MANAGEMENT =====
+  getInventory(productId) {
+    const stored = localStorage.getItem('bike_sale_inventory');
+    const inventory = stored ? JSON.parse(stored) : INVENTORY_DATABASE;
+    return inventory[productId] || 0;
+  },
+
+  saveInventory(inventory) {
+    localStorage.setItem('bike_sale_inventory', JSON.stringify(inventory));
+  },
+
+  updateInventory(productId, quantity) {
+    const inventory = this.getInventory(productId) || 0;
+    const newQuantity = Math.max(0, inventory + quantity);
+    const allInventory = this.getAllInventory();
+    allInventory[productId] = newQuantity;
+    this.saveInventory(allInventory);
+    return newQuantity;
+  },
+
+  getAllInventory() {
+    const stored = localStorage.getItem('bike_sale_inventory');
+    return stored ? JSON.parse(stored) : INVENTORY_DATABASE;
+  },
+
+  decreaseInventory(productId, quantity = 1) {
+    return this.updateInventory(productId, -quantity);
+  },
+
+  increaseInventory(productId, quantity = 1) {
+    return this.updateInventory(productId, quantity);
+  },
+
+  isInStock(productId) {
+    return this.getInventory(productId) > 0;
+  },
+
+  // ===== PRODUCT ANALYTICS =====
+  getTopRatedProducts(limit = 5) {
+    const products = this.getProducts();
+    return this.sortProducts(products, 'reviews', 'desc').slice(0, limit);
+  },
+
+  getMostReviewedProducts(limit = 5) {
+    const products = this.getProducts();
+    return this.sortProducts(products, 'reviewCount', 'desc').slice(0, limit);
+  },
+
+  getCategoryStats() {
+    const products = this.getProducts();
+    const stats = {};
+    
+    products.forEach(product => {
+      if (!stats[product.category]) {
+        stats[product.category] = {
+          count: 0,
+          avgPrice: 0,
+          totalPrice: 0,
+          avgRating: 0,
+          totalRating: 0
+        };
+      }
+      stats[product.category].count++;
+      stats[product.category].totalPrice += product.price;
+      stats[product.category].totalRating += product.reviews;
+    });
+    
+    // Calculate averages
+    Object.keys(stats).forEach(category => {
+      stats[category].avgPrice = stats[category].totalPrice / stats[category].count;
+      stats[category].avgRating = stats[category].totalRating / stats[category].count;
+    });
+    
+    return stats;
+  },
+
+  getPriceRange() {
+    const products = this.getProducts();
+    const prices = products.map(p => p.price);
+    return {
+      min: Math.min(...prices),
+      max: Math.max(...prices),
+      average: prices.reduce((a, b) => a + b) / prices.length
+    };
+  },
+
+  // ===== COMBINED SEARCH & FILTER =====
+  searchAndFilter(query, criteria = {}) {
+    let results = this.searchProducts(query);
+    results = this.filterProducts({ ...criteria, products: results });
+    return results;
+  },
+
+  // Convert filtering function to use search results
+  filterProducts(criteria) {
+    let products = criteria.products || this.getProducts();
+    
+    // Filter by category
+    if (criteria.category && criteria.category !== 'all') {
+      products = products.filter(p => p.category === criteria.category);
+    }
+    
+    // Filter by price range
+    if (criteria.minPrice !== undefined) {
+      products = products.filter(p => p.price >= criteria.minPrice);
+    }
+    if (criteria.maxPrice !== undefined) {
+      products = products.filter(p => p.price <= criteria.maxPrice);
+    }
+    
+    // Filter by stock status
+    if (criteria.inStock === true) {
+      products = products.filter(p => p.inStock);
+    }
+    
+    // Filter by minimum rating
+    if (criteria.minRating !== undefined) {
+      products = products.filter(p => p.reviews >= criteria.minRating);
+    }
+    
+    // Filter by minimum review count
+    if (criteria.minReviews !== undefined) {
+      products = products.filter(p => p.reviewCount >= criteria.minReviews);
+    }
+    
+    return products;
+  },
+
+  // ===== CLEAR ALL DATA
   clearAllData() {
     localStorage.removeItem(CONFIG.storage.cartKey);
     localStorage.removeItem(CONFIG.storage.ordersKey);
@@ -223,7 +426,12 @@ const DatabaseManager = {
   }
 };
 
-// Initialize products on first load
+// Initialize data on first load
 if (!localStorage.getItem('bike_sale_products')) {
   DatabaseManager.saveProducts(PRODUCTS_DATABASE);
+}
+
+// Initialize inventory on first load
+if (!localStorage.getItem('bike_sale_inventory')) {
+  DatabaseManager.saveInventory(INVENTORY_DATABASE);
 }

@@ -1,0 +1,301 @@
+<!-- 
+  DATABASE FEATURES - HTML INTEGRATION EXAMPLES
+  Add these elements and event listeners to your products.html or index.html
+-->
+
+<!-- ===== SEARCH BAR EXAMPLE ===== -->
+<div class="search-bar" style="margin: 2rem 0; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+  <input 
+    type="text" 
+    id="productSearch" 
+    placeholder="Search bikes by name, type, or specs..." 
+    style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;"
+  />
+  <small style="display: block; margin-top: 0.5rem; color: #666;">
+    Search across: name, description, category, and specifications
+  </small>
+</div>
+
+<!-- ===== PRICE RANGE FILTER ===== -->
+<div class="price-filter" style="margin: 2rem 0; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+  <h3>Filter by Price</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+    <div>
+      <label>Min Price: $<span id="minPriceValue">500</span></label>
+      <input 
+        type="range" 
+        id="minPrice" 
+        min="500" 
+        max="1500" 
+        value="500"
+        style="width: 100%;"
+      />
+    </div>
+    <div>
+      <label>Max Price: $<span id="maxPriceValue">1500</span></label>
+      <input 
+        type="range" 
+        id="maxPrice" 
+        min="500" 
+        max="1500" 
+        value="1500"
+        style="width: 100%;"
+      />
+    </div>
+  </div>
+</div>
+
+<!-- ===== RATING FILTER ===== -->
+<div class="rating-filter" style="margin: 2rem 0; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+  <h3>Filter by Rating</h3>
+  <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+    <label><input type="radio" name="rating" value="0" checked /> All Ratings</label>
+    <label><input type="radio" name="rating" value="4.0" /> 4.0+ ⭐</label>
+    <label><input type="radio" name="rating" value="4.3" /> 4.3+ ⭐</label>
+    <label><input type="radio" name="rating" value="4.5" /> 4.5+ ⭐</label>
+    <label><input type="radio" name="rating" value="4.7" /> 4.7+ ⭐</label>
+  </div>
+</div>
+
+<!-- ===== SORTING OPTIONS ===== -->
+<div class="sort-options" style="margin: 2rem 0; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+  <label>Sort By:</label>
+  <select id="sortBy" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+    <option value="name-asc">Name (A-Z)</option>
+    <option value="price-asc">Price (Low to High)</option>
+    <option value="price-desc">Price (High to Low)</option>
+    <option value="rating-desc">Highest Rated</option>
+    <option value="reviews-desc">Most Reviewed</option>
+  </select>
+</div>
+
+<!-- ===== INVENTORY STATUS in PRODUCTS ===== -->
+<!-- Add this to each product card to show inventory -->
+<div style="margin-top: 0.5rem; padding: 0.5rem; background: #f0f0f0; border-radius: 4px; font-size: 0.9rem;">
+  <span id="inventory-roadster-200">📦 In Stock (30)</span>
+</div>
+
+<!-- ===== JAVASCRIPT IMPLEMENTATION ===== -->
+<script>
+// Make sure DatabaseManager and products are loaded first!
+
+document.addEventListener('DOMContentLoaded', function() {
+  
+  // ===== SEARCH FUNCTIONALITY =====
+  const searchInput = document.getElementById('productSearch');
+  if (searchInput) {
+    searchInput.addEventListener('input', function(e) {
+      const query = e.target.value;
+      let results;
+      
+      if (query.trim() === '') {
+        results = DatabaseManager.getProducts();
+      } else {
+        results = DatabaseManager.searchProducts(query);
+      }
+      
+      displayProducts(results);
+    });
+  }
+  
+  // ===== PRICE RANGE FILTER =====
+  const minPrice = document.getElementById('minPrice');
+  const maxPrice = document.getElementById('maxPrice');
+  const minPriceValue = document.getElementById('minPriceValue');
+  const maxPriceValue = document.getElementById('maxPriceValue');
+  
+  if (minPrice && maxPrice) {
+    function updatePriceFilter() {
+      minPriceValue.textContent = minPrice.value;
+      maxPriceValue.textContent = maxPrice.value;
+      applyAllFilters();
+    }
+    
+    minPrice.addEventListener('change', updatePriceFilter);
+    maxPrice.addEventListener('change', updatePriceFilter);
+  }
+  
+  // ===== RATING FILTER =====
+  const ratingInputs = document.querySelectorAll('input[name="rating"]');
+  ratingInputs.forEach(input => {
+    input.addEventListener('change', applyAllFilters);
+  });
+  
+  // ===== SORTING =====
+  const sortBy = document.getElementById('sortBy');
+  if (sortBy) {
+    sortBy.addEventListener('change', applyAllFilters);
+  }
+  
+  // ===== COMBINED FILTER APPLICATION =====
+  function applyAllFilters() {
+    let products = DatabaseManager.getProducts();
+    
+    // Apply price filter
+    const minPriceVal = minPrice ? parseFloat(minPrice.value) : 0;
+    const maxPriceVal = maxPrice ? parseFloat(maxPrice.value) : 99999;
+    products = products.filter(p => p.price >= minPriceVal && p.price <= maxPriceVal);
+    
+    // Apply rating filter
+    const minRating = parseFloat(document.querySelector('input[name="rating"]:checked')?.value) || 0;
+    if (minRating > 0) {
+      products = products.filter(p => p.reviews >= minRating);
+    }
+    
+    // Apply sorting
+    if (sortBy) {
+      const sortValue = sortBy.value;
+      if (sortValue === 'name-asc') {
+        products = DatabaseManager.sortProducts(products, 'name', 'asc');
+      } else if (sortValue === 'price-asc') {
+        products = DatabaseManager.sortProducts(products, 'price', 'asc');
+      } else if (sortValue === 'price-desc') {
+        products = DatabaseManager.sortProducts(products, 'price', 'desc');
+      } else if (sortValue === 'rating-desc') {
+        products = DatabaseManager.sortProducts(products, 'reviews', 'desc');
+      } else if (sortValue === 'reviews-desc') {
+        products = DatabaseManager.sortProducts(products, 'reviewCount', 'desc');
+      }
+    }
+    
+    displayProducts(products);
+  }
+  
+  // ===== DISPLAY PRODUCTS WITH INVENTORY =====
+  function displayProducts(products) {
+    const grid = document.querySelector('.product-grid');
+    if (!grid) return;
+    
+    grid.innerHTML = '';
+    
+    products.forEach(product => {
+      const inventory = DatabaseManager.getInventory(product.id);
+      const inStock = DatabaseManager.isInStock(product.id);
+      
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.data-category = product.category;
+      
+      card.innerHTML = `
+        <img src="${product.image}" alt="${product.name}" />
+        <div class="card-content">
+          <h3>${product.name}</h3>
+          <p class="description">${product.description}</p>
+          <p class="price">$${product.price}</p>
+          <div style="margin: 0.5rem 0; font-size: 0.85rem; color: #666;">
+            <div>⭐ ${product.reviews}/5 (${product.reviewCount} reviews)</div>
+            <div>${inStock ? `📦 ${inventory} in stock` : '❌ Out of stock'}</div>
+          </div>
+          <button 
+            class="btn primary buy" 
+            data-id="${product.id}"
+            ${!inStock ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}
+          >
+            ${inStock ? 'Add to Cart' : 'Out of Stock'}
+          </button>
+        </div>
+      `;
+      
+      grid.appendChild(card);
+    });
+    
+    // Re-attach click handlers to new buttons
+    attachBuyButtonHandlers();
+  }
+  
+  // ===== UPDATED BUY BUTTON HANDLER WITH INVENTORY =====
+  function attachBuyButtonHandlers() {
+    document.querySelectorAll('.buy').forEach(btn => {
+      btn.removeEventListener('click', buyClickHandler);
+      btn.addEventListener('click', buyClickHandler);
+    });
+  }
+  
+  function buyClickHandler() {
+    const productId = this.getAttribute('data-id');
+    const product = DatabaseManager.getProductById(productId);
+    
+    // Check inventory
+    if (!DatabaseManager.isInStock(productId)) {
+      alert('Sorry, this item is out of stock!');
+      return;
+    }
+    
+    const inventory = DatabaseManager.getInventory(productId);
+    if (inventory <= 0) {
+      alert('Sorry, this item is out of stock!');
+      return;
+    }
+    
+    // Add to cart
+    DatabaseManager.addToCart(product, 1);
+    
+    // Update inventory
+    DatabaseManager.decreaseInventory(productId, 1);
+    
+    // Update cart count
+    const stats = DatabaseManager.getCartStats();
+    const cartCountEl = document.getElementById('cartCount');
+    if (cartCountEl) {
+      cartCountEl.textContent = stats.totalItems;
+    }
+    
+    // Visual feedback
+    this.textContent = 'Added! ✓';
+    this.style.background = '#10b981';
+    setTimeout(() => {
+      this.textContent = 'Add to Cart';
+      this.style.background = '';
+      applyAllFilters(); // Refresh to update inventory display
+    }, 1500);
+  }
+  
+  // Initial display
+  displayProducts(DatabaseManager.getProducts());
+});
+</script>
+
+<!-- ===== OPTIONAL: ADVANCED DASHBOARD ===== -->
+<div class="analytics-dashboard" style="margin: 3rem 0; padding: 2rem; background: #f8f9fa; border-radius: 8px;">
+  <h2>Shop Analytics</h2>
+  <div id="analyticsContent" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+    <!-- Will be populated by JavaScript -->
+  </div>
+</div>
+
+<script>
+// Optional: Display analytics on page load
+function displayAnalytics() {
+  const analyticsContent = document.getElementById('analyticsContent');
+  if (!analyticsContent) return;
+  
+  const priceRange = DatabaseManager.getPriceRange();
+  const topRated = DatabaseManager.getTopRatedProducts(1)[0];
+  const mostReviewed = DatabaseManager.getMostReviewedProducts(1)[0];
+  
+  analyticsContent.innerHTML = `
+    <div style="padding: 1rem; background: white; border-radius: 4px;">
+      <h3>Price Range</h3>
+      <p>💰 From <strong>$${priceRange.min}</strong> to <strong>$${priceRange.max}</strong></p>
+      <p>📊 Average: <strong>$${priceRange.average.toFixed(2)}</strong></p>
+    </div>
+    <div style="padding: 1rem; background: white; border-radius: 4px;">
+      <h3>Top Rated</h3>
+      <p>⭐ <strong>${topRated.name}</strong></p>
+      <p>${topRated.reviews}/5 (${topRated.reviewCount} reviews)</p>
+    </div>
+    <div style="padding: 1rem; background: white; border-radius: 4px;">
+      <h3>Most Popular</h3>
+      <p>🔥 <strong>${mostReviewed.name}</strong></p>
+      <p>${mostReviewed.reviewCount} customer reviews</p>
+    </div>
+  `;
+}
+
+// Call after DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', displayAnalytics);
+} else {
+  displayAnalytics();
+}
+</script>
