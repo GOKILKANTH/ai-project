@@ -1,3 +1,5 @@
+-- Active: 1771568553793@@localhost@3306@bike_sale_db
+-- Active: 1771568553793@@localhost@3306@bike_sale_dblhost@3306@bike_sale_db
 -- ===========================
 -- BIKE SALE DATABASE SETUP
 -- ===========================
@@ -29,10 +31,27 @@ CREATE TABLE IF NOT EXISTS products (
 );
 
 -- ===========================
+-- USERS TABLE (Authentication)
+-- ===========================
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  first_name VARCHAR(100),
+  last_name VARCHAR(100),
+  phone VARCHAR(20),
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_email (email)
+);
+
+-- ===========================
 -- CUSTOMERS TABLE
 -- ===========================
 CREATE TABLE IF NOT EXISTS customers (
   id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
   email VARCHAR(255) UNIQUE NOT NULL,
   name VARCHAR(255) NOT NULL,
   phone VARCHAR(20),
@@ -42,7 +61,8 @@ CREATE TABLE IF NOT EXISTS customers (
   postal_code VARCHAR(20),
   country VARCHAR(100),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 -- ===========================
@@ -134,13 +154,22 @@ INSERT INTO products (id, name, category, price, image, description, frame, weig
 ('trail-tracker', 'Trail Tracker', 'mountain', 749.00, 'https://source.unsplash.com/800x600/?mountain+bike,3', 'Smooth handling mountain bike for trails', 'Alloy', '11.9 kg', '18-speed', 'V-Brakes', TRUE, 18, 4.5, 31);
 
 -- ===========================
--- INSERT SAMPLE CUSTOMER
+-- INSERT SAMPLE USERS
 -- ===========================
 
-INSERT INTO customers (email, name, phone, address, city, state, postal_code, country) VALUES
-('john@example.com', 'John Doe', '555-0100', '123 Main St', 'Springfield', 'IL', '62701', 'USA'),
-('jane@example.com', 'Jane Smith', '555-0101', '456 Oak Ave', 'Shelbyville', 'IL', '62702', 'USA'),
-('bob@example.com', 'Bob Johnson', '555-0102', '789 Pine Rd', 'Capital City', 'IL', '62703', 'USA');
+INSERT INTO users (email, password_hash, first_name, last_name, phone, is_active) VALUES
+('john@example.com', '$2b$10$YourHashedPasswordHere1', 'John', 'Doe', '555-0100', TRUE),
+('jane@example.com', '$2b$10$YourHashedPasswordHere2', 'Jane', 'Smith', '555-0101', TRUE),
+('bob@example.com', '$2b$10$YourHashedPasswordHere3', 'Bob', 'Johnson', '555-0102', TRUE);
+
+-- ===========================
+-- INSERT SAMPLE CUSTOMERS
+-- ===========================
+
+INSERT INTO customers (user_id, email, name, phone, address, city, state, postal_code, country) VALUES
+(1, 'john@example.com', 'John Doe', '555-0100', '123 Main St', 'Springfield', 'IL', '62701', 'USA'),
+(2, 'jane@example.com', 'Jane Smith', '555-0101', '456 Oak Ave', 'Shelbyville', 'IL', '62702', 'USA'),
+(3, 'bob@example.com', 'Bob Johnson', '555-0102', '789 Pine Rd', 'Capital City', 'IL', '62703', 'USA');
 
 -- ===========================
 -- INSERT SAMPLE ORDER

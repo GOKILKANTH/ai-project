@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protected Page Example - Bike Sale</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="auth.js"></script>
+    <style>
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: rgb(255, 255, 255);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .navbar-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .user-info {
+            background: rgba(255,255,255,0.1);
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #ff5252;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .welcome-card h2 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        .welcome-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .example-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .example-section h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+
+        .success {
+            background: #efe;
+            color: #3c3;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3c3;
+        }
+
+        .user-data {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button.action-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        button.action-btn:hover {
+            background: #764ba2;
+        }
+
+        button.action-btn.danger {
+            background: #ff6b6b;
+        }
+
+        button.action-btn.danger:hover {
+            background: #ff5252;
+        }
+    </style>
+</head>
+<body>
+    <!-- ===========================
+         AUTHENTICATION CHECK
+         =========================== -->
+    <script>
+        // Redirect to login if not authenticated
+        if (!AUTH.requireLogin()) {
+            // User will be redirected by requireLogin()
+        }
+    </script>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <h1>🚴 Bike Sale - Protected Page</h1>
+        <div class="navbar-right">
+            <div class="user-info">
+                Welcome, <span id="userName">Guest</span>!
+            </div>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-card">
+            <h2>Protected Page Example</h2>
+            <p>
+                This is an example of a protected page that requires authentication. 
+                Only logged-in users can see this content. If you tried to access this page 
+                without logging in, you would be redirected to the login page.
+            </p>
+            <p>
+                This template shows you how to:
+            </p>
+            <ul>
+                <li>Protect pages with authentication</li>
+                <li>Display user information</li>
+                <li>Handle logout</li>
+                <li>Make authenticated API calls</li>
+                <li>Display user data from localStorage</li>
+            </ul>
+        </div>
+
+        <!-- Current User Info -->
+        <div class="example-section">
+            <h3>👤 Current User Information</h3>
+            <p>This data is stored in localStorage and loaded from your login session:</p>
+            <div id="userDataDisplay" class="user-data">Loading user data...</div>
+            <div class="button-group">
+                <button class="action-btn" onclick="displayUserData()">Refresh User Data</button>
+                <button class="action-btn danger" onclick="handleLogout()">Logout</button>
+            </div>
+        </div>
+
+        <!-- How to Protect Pages -->
+        <div class="example-section">
+            <h3>🔐 How to Protect Your Pages</h3>
+            <p>Add this to any HTML page that requires authentication:</p>
+            
+            <h4>Method 1: Require Login (Recommended)</h4>
+            <pre>&lt;script src="auth.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  AUTH.requireLogin();
+&lt;/script&gt;</pre>
+
+            <h4>Method 2: Check Token Manually</h4>
+            <pre>&lt;script&gt;
+  if (!localStorage.getItem('token')) {
+    window.location.href = 'login.html';
+  }
+&lt;/script&gt;</pre>
+
+            <h4>Method 3: Verify with Server</h4>
+            <pre>&lt;script&gt;
+  AUTH.verifyAndProtect().then(valid => {
+    if (valid) {
+      // Page content is protected
+      console.log('User is authenticated');
+    }
+  });
+&lt;/script&gt;</pre>
+        </div>
+
+        <!-- User Display in Navigation -->
+        <div class="example-section">
+            <h3>👥 Display User in Navigation</h3>
+            <p>Show the logged-in user's name in your header:</p>
+            
+            <h4>In HTML:</h4>
+            <pre>&lt;nav&gt;
+  &lt;h1&gt;Welcome, &lt;span id="userName"&gt;&lt;/span&gt;!&lt;/h1&gt;
+  &lt;button onclick="logout()"&gt;Logout&lt;/button&gt;
+&lt;/nav&gt;
+
+&lt;script src="auth.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  AUTH.displayUserInfo('userName');
+  
+  function logout() {
+    AUTH.logout();
+    location.href = 'login.html';
+  }
+&lt;/script&gt;</pre>
+        </div>
+
+        <!-- Making API Calls -->
+        <div class="example-section">
+            <h3>🔌 Making Authenticated API Calls</h3>
+            <p>Use the AUTH helper to make API calls with your token:</p>
+
+            <h4>Get Products:</h4>
+            <pre>const products = await AUTH.apiCall('/products');
+console.log(products);</pre>
+
+            <h4>Get Your Orders:</h4>
+            <pre>const user = AUTH.getUser();
+const orders = await AUTH.apiCall(`/orders/customer/${user.id}`);
+console.log(orders);</pre>
+
+            <h4>Add to Cart:</h4>
+            <pre>await AUTH.addToCart('roadster-200', 1);
+console.log('Item added to cart');</pre>
+
+            <div class="button-group">
+                <button class="action-btn" onclick="testApiCall()">Test API Call</button>
+            </div>
+            <div id="apiResponse"></div>
+        </div>
+
+        <!-- Session Management -->
+        <div class="example-section">
+            <h3>📋 Session Management Functions</h3>
+
+            <h4>Check if Logged In:</h4>
+            <pre>if (AUTH.isLoggedIn()) {
+  console.log('User is logged in');
+}</pre>
+
+            <h4>Get Current User:</h4>
+            <pre>const user = AUTH.getUser();
+console.log(user.email);      // user@example.com
+console.log(user.first_name);  // John</pre>
+
+            <h4>Get JWT Token:</h4>
+            <pre>const token = AUTH.getToken();
+console.log(token); // eyJhbGciOiJIUzI1NiIs...</pre>
+
+            <h4>Clear Session:</h4>
+            <pre>AUTH.clearSession();
+// User is logged out</pre>
+
+            <h4>Verify Token with Server:</h4>
+            <pre>const isValid = await AUTH.verify();
+if (isValid) {
+  console.log('Token is still valid');
+} else {
+  console.log('Token expired, please login again');
+}</pre>
+
+            <div class="button-group">
+                <button class="action-btn" onclick="checkLogin()">Check Login Status</button>
+                <button class="action-btn" onclick="verifyToken()">Verify Token</button>
+            </div>
+        </div>
+
+        <!-- Manual Logout for Examples -->
+        <div class="example-section">
+            <h3>🚪 Logout Examples</h3>
+
+            <h4>Simple Logout:</h4>
+            <pre>AUTH.logout();
+window.location.href = 'login.html';</pre>
+
+            <h4>With Confirmation:</h4>
+            <pre>if (confirm('Are you sure you want to logout?')) {
+  AUTH.logout();
+  window.location.href = 'login.html';
+}</pre>
+
+            <h4>With Message:</h4>
+            <pre>await AUTH.logout();
+alert('You have been logged out');
+window.location.href = 'login.html';</pre>
+
+            <div class="button-group">
+                <button class="action-btn danger" onclick="handleLogout()">Logout Now</button>
+            </div>
+        </div>
+
+        <!-- Integration Examples -->
+        <div class="example-section">
+            <h3>🔗 Integration Examples</h3>
+            <p>Here are some real-world examples of how to use authentication in your app:</p>
+
+            <h4>Add to Cart (Before & After)</h4>
+            <pre>// BEFORE: Required manual session ID
+DatabaseManager.addToCart(product, quantity);
+
+// AFTER: Automatic with authentication
+const user = AUTH.getUser();
+await AUTH.addToCart(product.id, quantity);</pre>
+
+            <h4>Create Order (Before & After)</h4>
+            <pre>// BEFORE: Manual customer selection
+const order = {
+  customer_name: prompt('Name?'),
+  items: cartItems
+};
+
+// AFTER: Automatic from login
+const user = AUTH.getUser();
+const order = await AUTH.apiCall('/orders', {
+  method: 'POST',
+  body: JSON.stringify({
+    customer_id: user.id,
+    items: cartItems
+  })
+});</pre>
+
+            <h4>Display Orders (New capability!)</h4>
+            <pre>// Only possible with authentication
+const user = AUTH.getUser();
+const orders = await AUTH.getUserOrders(user.id);
+orders.forEach(order => {
+  console.log(`Order #${order.id}: ${order.total_amount}`);
+});</pre>
+        </div>
+
+        <!-- Copy Template Section -->
+        <div class="example-section">
+            <h3>📋 Copy This Template</h3>
+            <p>Use this basic structure for your protected pages:</p>
+            <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My Protected Page&lt;/title&gt;
+  &lt;link rel="stylesheet" href="styles.css"&gt;
+  &lt;script src="auth.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Protect the page --&gt;
+  &lt;script&gt;
+    AUTH.requireLogin();
+  &lt;/script&gt;
+
+  &lt;nav&gt;
+    &lt;h1&gt;Welcome, &lt;span id="userName"&gt;&lt;/span&gt;!&lt;/h1&gt;
+    &lt;button onclick="AUTH.logout(); location.href='login.html';"&gt;Logout&lt;/button&gt;
+  &lt;/nav&gt;
+
+  &lt;div class="container"&gt;
+    &lt;h2&gt;Your Protected Content Here&lt;/h2&gt;
+    &lt;!-- Your page content --&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    AUTH.displayUserInfo('userName');
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+        </div>
+
+        <!-- Final Notes -->
+        <div class="example-section">
+            <h3>✨ Final Notes</h3>
+            <ul>
+                <li><strong>auth.js</strong> should be included in every protected page</li>
+                <li><strong>AUTH.requireLogin()</strong> is the easiest way to protect a page</li>
+                <li><strong>Always check</strong> if user is logged in before showing sensitive data</li>
+                <li><strong>Store</strong> the JWT token in localStorage for persistent sessions</li>
+                <li><strong>Verify</strong> the token with the server for sensitive operations</li>
+                <li><strong>Clear</strong> the session when logging out</li>
+                <li><strong>Use HTTPS</strong> in production for secure token transmission</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Display user data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            displayUserData();
+        });
+
+        // ===========================
+        // USER DATA DISPLAY
+        // ===========================
+        function displayUserData() {
+            const user = AUTH.getUser();
+            const token = AUTH.getToken();
+            const truncatedToken = token ? token.substring(0, 20) + '...' : 'No token';
+            
+            const userData = {
+                'User ID': user?.id || 'N/A',
+                'Email': user?.email || 'N/A',
+                'First Name': user?.first_name || 'N/A',
+                'Last Name': user?.last_name || 'N/A',
+                'Token': truncatedToken,
+                'Is Logged In': AUTH.isLoggedIn() ? 'Yes' : 'No'
+            };
+
+            const output = Object.entries(userData)
+                .map(([key, value]) => `${key}: ${value}`)
+                .join('\n');
+
+            document.getElementById('userDataDisplay').textContent = output;
+        }
+
+        // ===========================
+        // LOGOUT HANDLER
+        // ===========================
+        async function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    await AUTH.logout();
+                    alert('Logged out successfully');
+                    window.location.href = 'login.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    window.location.href = 'login.html';
+                }
+            }
+        }
+
+        // ===========================
+        // TEST API CALL
+        // ===========================
+        async function testApiCall() {
+            const responseDiv = document.getElementById('apiResponse');
+            responseDiv.innerHTML = '<div class="loading">Making API call...</div>';
+
+            try {
+                const data = await AUTH.apiCall('/products');
+                responseDiv.innerHTML = `
+                    <div class="success">
+                        <strong>✅ API Call Successful!</strong><br>
+                        Retrieved ${data.length} products
+                    </div>
+                `;
+            } catch (error) {
+                responseDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ API Call Failed</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // ===========================
+        // CHECK LOGIN STATUS
+        // ===========================
+        function checkLogin() {
+            const isLoggedIn = AUTH.isLoggedIn();
+            const message = isLoggedIn 
+                ? `✅ You are logged in as ${AUTH.getUser().email}`
+                : '❌ You are not logged in';
+            
+            alert(message);
+        }
+
+        // ===========================
+        // VERIFY TOKEN
+        // ===========================
+        async function verifyToken() {
+            try {
+                const isValid = await AUTH.verify();
+                const message = isValid
+                    ? '✅ Your token is valid and still active'
+                    : '❌ Your token is invalid or expired';
+                
+                alert(message);
+            } catch (error) {
+                alert('❌ Error verifying token: ' + error.message);
+            }
+        }
+
+        // Display user name in navbar
+        AUTH.displayUserInfo('userName');
+    </script>
+</body>
+</html>

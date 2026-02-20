@@ -1,16 +1,19 @@
 // ===========================
-// BIKE SALE APP - EXPRESS SERVER
+// BIKE SALE APP - EXPRESS SERVER WITH AUTH
 // ===========================
-// Install dependencies: npm install express cors mysql2 dotenv body-parser
+// Install dependencies: npm install express cors mysql2 dotenv body-parser bcryptjs jsonwebtoken
 
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2/promise');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key_change_in_production';
 
 // Middleware
 app.use(cors());
@@ -29,6 +32,146 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
+});
+
+// ===========================
+// AUTHENTICATION MIDDLEWARE
+// ===========================
+
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) return res.status(401).json({ error: 'Access token required' });
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ error: 'Invalid or expired token' });
+    req.user = user;
+    next();
+  });
+};
+
+// ===========================
+// AUTHENTICATION ENDPOINTS
+// ===========================
+
+// Register new user
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { email, password, first_name, last_name } = req.body;
+
+    // Validate input
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+
+    const connection = await pool.getConnection();
+
+    // Check if user exists
+    const [existingUser] = await connection.query(
+      'SELECT id FROM users WHERE email = ?',
+      [email]
+    );
+
+    if (existingUser.length > 0) {
+      connection.release();
+      return res.status(400).json({ error: 'Email already registered' });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create user
+    const [result] = await connection.query(
+      'INSERT INTO users (email, password_hash, first_name, last_name, is_active) VALUES (?, ?, ?, ?, TRUE)',
+      [email, hashedPassword, first_name || '', last_name || '']
+    );
+
+    connection.release();
+
+    res.status(201).json({
+      id: result.insertId,
+      email,
+      first_name,
+      last_name,
+      message: 'User registered successfully'
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Login user
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    const connection = await pool.getConnection();
+
+    // Get user
+    const [users] = await connection.query(
+      'SELECT id, email, password_hash, first_name, last_name, is_active FROM users WHERE email = ?',
+      [email]
+    );
+
+    connection.release();
+
+    if (users.length === 0) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    const user = users[0];
+
+    // Check if user is active
+    if (!user.is_active) {
+      return res.status(401).json({ error: 'Account is disabled' });
+    }
+
+    // Verify password
+    const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name
+      }
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Verify token
+app.get('/api/auth/verify', authenticateToken, (req, res) => {
+  res.json({ valid: true, user: req.user });
+});
+
+// Logout (client-side token deletion)
+app.post('/api/auth/logout', (req, res) => {
+  res.json({ message: 'Logged out successfully' });
 });
 
 // ===========================
