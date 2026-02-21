@@ -191,7 +191,7 @@ curl -X POST http://localhost:3000/api/cart/add \
 
 ### Get Cart
 ```bash
-curl http://localhost:3000/api/cart/sess_123
+curl http://localhost:3306/api/cart/sess_123
 ```
 
 ---
